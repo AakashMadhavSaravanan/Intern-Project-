@@ -1,0 +1,37 @@
+import pandas as pd
+import numpy as np
+
+# Load the CSV file into a DataFrame
+df = pd.read_csv('01.Data Cleaning and Preprocessing.csv')
+
+# Display the first few rows of the DataFrame
+print("First few rows of the DataFrame:")
+print(df.head())
+
+# Convert 'ChipRate' to numeric, coercing errors
+df['ChipRate'] = pd.to_numeric(df['ChipRate'], errors='coerce')
+
+# Drop rows where 'ChipRate' could not be converted to numeric
+df = df.dropna(subset=['ChipRate'])
+
+# Fill NaN values in 'ChipRate' with the mean
+df['ChipRate'].fillna(df['ChipRate'].mean(), inplace=True)
+
+# Handling missing values in other columns
+df_filled = df.fillna(df.mean())
+print("\nDataFrame after filling missing values with the mean:")
+print(df_filled)
+
+# Dropping rows with any remaining missing values
+df_dropped = df.dropna()
+print("\nDataFrame after dropping rows with missing values:")
+print(df_dropped)
+
+# Calculating summary statistics
+summary_stats = df.describe()
+print("\nSummary statistics of the DataFrame:")
+print(summary_stats)
+
+# Calculate the mean of the 'ChipRate' column
+chiprate_mean = df['ChipRate'].mean()
+print(f"\nMean of 'ChipRate': {chiprate_mean}")
