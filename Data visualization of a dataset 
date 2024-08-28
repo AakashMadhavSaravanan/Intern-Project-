@@ -1,0 +1,56 @@
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Iris dataset
+df = sns.load_dataset('iris')
+
+# Select only the numerical columns for correlation calculation
+numerical_df = df.select_dtypes(include=['float', 'int'])  # Select numerical columns
+
+# Display the first few rows of the dataset
+print("First 5 rows of the dataset:")
+print(df.head())
+
+# Display information about the dataset
+print("\nInformation about the dataset:")
+print(df.info())
+
+# Display summary statistics
+print("\nSummary statistics of the dataset:")
+print(df.describe())
+
+# Plot histograms for each numerical feature
+df.hist(bins=20, figsize=(10, 8), edgecolor='black')
+plt.suptitle('Histograms of Iris Dataset Features', fontsize=16)
+plt.show()
+
+# Plot boxplots for each numerical feature
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df, width=0.5)
+plt.title('Boxplot of Iris Dataset Features', fontsize=16)
+plt.show()
+
+# Plot countplot for the species
+sns.countplot(x='species', data=df)
+plt.title('Distribution of Iris Species', fontsize=16)
+plt.show()
+
+# Compute and display the correlation matrix
+plt.figure(figsize=(8, 6))
+corr = numerical_df.corr()  # Calculate correlation on numerical columns
+sns.heatmap(corr, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Matrix of Iris Dataset Features', fontsize=16)
+plt.show()
+
+
+
+# Plot pairplot for the dataset
+sns.pairplot(df, hue='species')
+plt.suptitle('Pairplot of Iris Dataset', fontsize=16)
+plt.show()
+
+# Scatterplot example: Sepal Length vs. Sepal Width
+sns.scatterplot(x='sepal_length', y='sepal_width', hue='species', data=df)
+plt.title('Sepal Length vs. Sepal Width', fontsize=16)
+plt.show()
