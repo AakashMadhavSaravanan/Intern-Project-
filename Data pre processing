@@ -1,0 +1,82 @@
+# Importing necessary libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# Load the dataset
+file_path = "/mnt/data/heart.csv"
+heart_data = pd.read_csv(file_path)
+
+# Display initial information about the dataset
+print("First 5 rows of the dataset:")
+print(heart_data.head())
+
+print("\nDataset Information:")
+print(heart_data.info())
+
+print("\nSummary Statistics:")
+print(heart_data.describe())
+
+# Set up the plotting style
+plt.style.use('seaborn-whitegrid')
+plt.figure(figsize=(15, 10))
+
+# 1. Distribution of Age
+plt.subplot(2, 2, 1)
+sns.histplot(heart_data['age'], bins=20, kde=True, color='blue')
+plt.title('Age Distribution')
+plt.xlabel('Age')
+
+# 2. Distribution of Cholesterol
+plt.subplot(2, 2, 2)
+sns.histplot(heart_data['chol'], bins=20, kde=True, color='green')
+plt.title('Cholesterol Distribution')
+plt.xlabel('Cholesterol (mg/dl)')
+
+# 3. Distribution of Resting Blood Pressure
+plt.subplot(2, 2, 3)
+sns.histplot(heart_data['trestbps'], bins=20, kde=True, color='red')
+plt.title('Resting Blood Pressure Distribution')
+plt.xlabel('Resting Blood Pressure (mm Hg)')
+
+# 4. Correlation Heatmap
+plt.subplot(2, 2, 4)
+corr_matrix = heart_data.corr()
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Heatmap')
+
+plt.tight_layout()
+plt.show()
+
+# Splitting data into features and target variable
+X = heart_data.drop('target', axis=1)
+y = heart_data['target']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Standardize the features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Building a Random Forest model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train_scaled, y_train)
+
+# Predictions
+y_pred = model.predict(X_test_scaled)
+
+# Evaluation
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+print("\nAccuracy Score:")
+print(accuracy_score(y_test, y_pred))
